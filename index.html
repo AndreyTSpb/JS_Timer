@@ -7,11 +7,15 @@
     <title>Document</title>
 </head>
 <body>
-    <div id="timer">
+    <div id="timer" data-time="1640579683"></div>
+    <div class = "timer" id="timer_1" data-time="1640579683"></div>
+    <div class = "timer" id="timer_2" data-time="1649579683"></div>
+    <div class = "timer" id="timer_3" data-time="1642579683"></div>
+    <div class = "timer" id="timer_4" data-time="1657579683"></div>
 
-    </div>
     <script>
-        let endtime = 1639579683;
+        let endtime;
+
         function getTimeRemaining(endtime){
             
             let now = Date.parse(new Date())/1000; //дата в уникс тайм
@@ -30,25 +34,55 @@
                 'seconds': seconds
             };
         }
-
-        function initializeClock(id, endtime){
-                let timer = document.getElementById(id);
-                if(timer == null){
-                    console.log('не найден див для блока');
-                    return false;
-                }
-                let timeinterval = setInterval(function(){
-                        let t = getTimeRemaining(endtime);
-                        timer.innerHTML = 'days: ' + t.days + 'hours: '+ t.hours + 'minutes: ' + t.minutes + 'seconds: ' + t.seconds;
-                        if(t.total<=0){
-                            clearInterval(timeinterval);
-                        }
-                    },1000);
+        /**
+         * Инициализация таймера.
+         * Ожидаейт ID блока, куда размещать таймер
+         * Время конца отсчета берет из атрибута data-time (время в секундах)
+         * 
+         */
+        function initializeClock(id){
+            let timer = document.getElementById(id);
+            if(timer == null){
+                console.log('не найден див для блока');
+                return ;
             }
 
-        console.log(getTimeRemaining(endtime));
+            let endtime = timer.getAttribute('data-time');
+            if(endtime == null) {
+                console.log("Время не передано");
+                return ;
+            }
 
-        initializeClock('timer', endtime);
+            let timeinterval = setInterval(function(){
+                let t = getTimeRemaining(endtime);
+                timer.innerHTML = 'days: ' + t.days + ' hours: '+ t.hours + ' minutes: ' + t.minutes + ' seconds: ' + t.seconds;
+                if(t.total<=0){
+                    clearInterval(timeinterval);
+                }
+            },1000);
+        }
+
+        initializeClock('timer'); //Запуск одного счетчика
+
+        /**
+         * Запуск нескольких счетчиков
+         * Отыскиваем все блоки с нужным классом
+         */ 
+        function timers(classes){
+            let divs = document.querySelectorAll(classes);
+            if(divs == null){
+                console.log('не найдены дивы для таймеров');
+                return ;
+            }
+            divs.forEach(element => {
+               let id = element.getAttribute('id');
+               initializeClock(id);
+            });
+        }
+
+        timers('.timer');
+
+
     </script>
 </body>
 </html>
