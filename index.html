@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="timer">
+
+    </div>
+    <script>
+        let endtime = 1639579683;
+        function getTimeRemaining(endtime){
+            
+            let now = Date.parse(new Date())/1000; //дата в уникс тайм
+            
+            let t = endtime - now,
+                seconds = Math.floor( (t) % 60 ),
+                minutes = Math.floor( (t/60) % 60 ),
+                hours = Math.floor( (t/(60*60)) % 24 ),
+                days = Math.floor( t/(60*60*24) );
+                
+            return {
+                'total': t,
+                'days': days,
+                'hours': hours,
+                'minutes': minutes,
+                'seconds': seconds
+            };
+        }
+
+        function initializeClock(id, endtime){
+                let timer = document.getElementById(id);
+                if(timer == null){
+                    console.log('не найден див для блока');
+                    return false;
+                }
+                let timeinterval = setInterval(function(){
+                        let t = getTimeRemaining(endtime);
+                        timer.innerHTML = 'days: ' + t.days + 'hours: '+ t.hours + 'minutes: ' + t.minutes + 'seconds: ' + t.seconds;
+                        if(t.total<=0){
+                            clearInterval(timeinterval);
+                        }
+                    },1000);
+            }
+
+        console.log(getTimeRemaining(endtime));
+
+        initializeClock('timer', endtime);
+    </script>
+</body>
+</html>
